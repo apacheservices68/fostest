@@ -1,0 +1,31 @@
+fos_rest:
+    param_fetcher_listener: true
+    allowed_methods_listener: true
+    view:
+        view_response_listener: 'force'
+        formats:
+            xml:  true
+            json: true
+        templating_formats:
+            html: true
+    format_listener:
+        rules:
+            - {path: ^/api/, priorities: [json], fallback_format: null, prefer_extension: true}
+            - {path: ^/, priorities: [html], fallback_format: null, prefer_extension: true}
+    routing_loader:
+        default_format: json
+        include_format: false
+    serializer:
+        serialize_null: true
+    exception:
+        codes:
+            'Symfony\Component\Routing\Exception\ResourceNotFoundException': 404
+            'Doctrine\ORM\OptimisticLockException': HTTP_CONFLICT
+        messages:
+            'Symfony\Component\Routing\Exception\ResourceNotFoundException': true
+    access_denied_listener:
+        json: true
+
+    disable_csrf_role: ROLE_API
+    unauthorized_challenge: "xxxBasic realm=\"Foo Area\""
+
